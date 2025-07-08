@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="get" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Статус</label>
+            <select name="status" class="form-control">
+                <option value="">Все</option>
+                <option value="pending" {% if status_selected == 'pending' %}selected{% endif %}>В ожидании</option>
+                <option value="accepted" {% if status_selected == 'accepted' %}selected{% endif %}>Принятые</option>
+                <option value="rejected" {% if status_selected == 'rejected' %}selected{% endif %}>Отклонённые</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Тип</label>
+            <select name="direction" class="form-control">
+                <option value="">Все</option>
+                <option value="sent" {% if direction_selected == 'sent' %}selected{% endif %}>Отправил</option>
+                <option value="received" {% if direction_selected == 'received' %}selected{% endif %}>Получил</option>
+            </select>
+        </div>
+        <div class="col-md-2 mt-4">
+            <button type="submit" class="btn btn-primary">Фильтровать</button>
+        </div>
+    </div>
+</form>
+
+<div class="card mb-3">
+    {% if trades %}
+        {% for trade in trades %}
+        <form method="post" action="{% url 'main:update_trade' trade.id %}">
+            {% csrf_token %}
+            <div class="card-body">
+                <h2 class="card-title">
+                    <a href="{% url 'main:detail' trade.ad_receiver.id %}">{{ trade.ad_receiver.title }}</a>
+                </h2>
+                <p class="card-text">
+                    <a href="{% url 'main:detail' trade.ad_sender.id %}">Обмен на: {{ trade.ad_sender.title }}</a>
+                </p>
+                <p class="card-text">Комментарий: {{ trade.comment }}</p>
+                <p class="card-text">Статус: {{ trade.status }}</p>
+                <p class="text-muted">Отправитель: {{ trade.ad_sender.user.username }} | Получатель: {{ trade.ad_receiver.user.username }}</p>
+
+                {% if trade.ad_receiver.user == request.user and trade.status == 'pending' %}
+                    <button name="action" value="accept" class="btn btn-primary me-2">Принять</button>
+                    <button name="action" value="reject" class="btn btn-danger">Отклонить</button>
+                {% elif trade.ad_sender.user == request.user and trade.status == 'pending' %}
+                    <button name="action" value="cancel" class="btn btn-warning">Отменить</button>
+                {% endif %}
+            </div>
+        </form>
+        <hr>
+        {% endfor %}
+    {% else %}
+        <div class="card-header">
+            <h3 class="card-title text-center">Нет обменов</h3>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

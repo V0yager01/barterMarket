@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_title" class="form-label">Предложение</label>
+        {{ad_receiver.title}}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_description" class="form-label">Обмен на</label>
+        {{form.ad_sender}}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_category" class="form-label">Комментарий</label>
+        {{form.comment}}
+    </div>
+    <button type="submit" class="btn btn-success">Предложить обмен</button>
+    <a href="{% url 'main:createform' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post" class="mt-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_title" class="form-label">Заголовок</label>
+        {{form.title}}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_description" class="form-label">Описание</label>
+        {{form.description}}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_image" class="form-label">изображение</label>
+        {{form.image_url}}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_category" class="form-label">Категория</label>
+        {{form.category}}
+    </div>
+
+    <div class="mb-3">
+        <label for="id_condition" class="form-label">Состояние</label>
+        {{form.condition}}
+    </div>
+
+    <button type="submit" class="btn btn-success">Создать</button>
+    <a href="{% url 'main:createform' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
